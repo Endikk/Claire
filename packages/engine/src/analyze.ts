@@ -1,4 +1,4 @@
-import { controlesNonRealises, medicamentsNonReconnus, situationsNonVerifiees } from './rules/couverture'
+import { CONTROLES_NON_REALISES, medicamentsNonReconnus } from './rules/couverture'
 import { CONTROLE_DOUBLONS, doublonsDePrincipeActif, type ResolvedLine } from './rules/doublons'
 import {
   ALERT_KINDS,
@@ -33,12 +33,7 @@ export async function analyze(
   const recognizedIds = new Set(resolved.map((entry) => entry.line.id))
 
   const doublons = doublonsDePrincipeActif(resolved)
-  const alerts = [
-    ...doublons,
-    ...medicamentsNonReconnus(lines, recognizedIds),
-    ...situationsNonVerifiees(profile.situations),
-    ...controlesNonRealises(),
-  ].sort(byGravity)
+  const alerts = [...doublons, ...medicamentsNonReconnus(lines, recognizedIds)].sort(byGravity)
 
   return {
     alerts,
@@ -47,6 +42,7 @@ export async function analyze(
       recognizedCount: resolved.length,
       recognizedLineIds: resolved.map((entry) => entry.line.id),
       checksPerformed: [{ ...CONTROLE_DOUBLONS, alertCount: doublons.length }],
+      checksNotPerformed: [...CONTROLES_NON_REALISES],
       situations: profile.situations,
       withProfile: profile.situations.length > 0,
     },

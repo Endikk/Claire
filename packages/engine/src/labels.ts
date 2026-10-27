@@ -26,7 +26,7 @@ export const ALERT_KIND_LABELS: Record<AlertKind, string> = {
 }
 
 export const AVERTISSEMENT =
-  "Cette analyse est une aide. Elle ne remplace pas l'analyse pharmaceutique du pharmacien, qui en garde la responsabilité."
+  'Outil d’aide à l’analyse. Il ne remplace pas l’analyse pharmaceutique, qui reste sous la responsabilité du pharmacien.'
 
 export const RAPPEL_TRAITEMENTS_ABSENTS =
-  "Les traitements qui ne figurent pas sur l'ordonnance scannée ne sont pas pris en compte, sauf s'ils ont été ajoutés à la main."
+  'Seuls les médicaments saisis sont analysés. Ajoutez les autres traitements du patient pour les inclure.'

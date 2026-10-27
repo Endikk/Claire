@@ -73,11 +73,11 @@ describe('parcours d’analyse', () => {
     await user.click(screen.getByRole('button', { name: 'Lancer l’analyse' }))
 
     expect(await screen.findByRole('heading', { name: 'Résultats' })).toBeTruthy()
-    expect(screen.getByText(/Même principe actif dans 2 lignes : PARACÉTAMOL/)).toBeTruthy()
-    expect(screen.getByText(/Situation « enceinte » non vérifiée/)).toBeTruthy()
+    expect(screen.getByText('Principe actif en double : PARACÉTAMOL.')).toBeTruthy()
+    expect(screen.getByText('Profil : enceinte.')).toBeTruthy()
     expect(screen.getAllByText(/BDPM \(ANSM\), mise à jour du 29\/09\/2026/).length).toBeGreaterThan(0)
 
-    await user.click(screen.getByRole('button', { name: 'Terminer et effacer' }))
+    await user.click(screen.getByRole('button', { name: 'Terminer' }))
 
     expect(screen.getByRole('button', { name: 'Nouvelle analyse' })).toBeTruthy()
     expect(store.getState().lines).toEqual([])
@@ -91,18 +91,18 @@ describe('parcours d’analyse', () => {
     expect(screen.getByRole('button', { name: 'Continuer' }).hasAttribute('disabled')).toBe(true)
   })
 
-  test('permet d’ajouter un médicament introuvable, signalé comme non reconnu', async () => {
+  test('permet d’ajouter un médicament introuvable, signalé comme non identifié', async () => {
     const { store, user } = renderApp()
 
     await user.click(screen.getByRole('button', { name: 'Nouvelle analyse' }))
     await user.type(screen.getByLabelText('Rechercher un médicament'), 'xyzoline')
-    await user.click(screen.getByRole('button', { name: 'Ajouter « xyzoline » sans correspondance' }))
+    await user.click(screen.getByRole('button', { name: 'Ajouter « xyzoline » manuellement' }))
 
     expect(store.getState().lines).toMatchObject([{ productId: null, label: 'xyzoline' }])
-    expect(screen.getByText('Non reconnu dans les données')).toBeTruthy()
+    expect(screen.getByText('Non identifié : non inclus dans l’analyse')).toBeTruthy()
   })
 
-  test('indique une analyse sans profil patient quand aucune case n’est cochée', async () => {
+  test('indique un profil non renseigné quand aucune case n’est cochée', async () => {
     const { user } = renderApp()
 
     await user.click(screen.getByRole('button', { name: 'Nouvelle analyse' }))
@@ -110,10 +110,10 @@ describe('parcours d’analyse', () => {
     await user.click(screen.getByRole('button', { name: 'Continuer' }))
     await user.click(screen.getByRole('button', { name: 'Lancer l’analyse' }))
 
-    expect(await screen.findByText(/Analyse sans profil patient/)).toBeTruthy()
+    expect(await screen.findByText('Profil : non renseigné.')).toBeTruthy()
   })
 
-  test('décrit le contrôle des doublons effectué, même sans alerte', async () => {
+  test('distingue les contrôles réalisés de ceux qui ne le sont pas', async () => {
     const { user } = renderApp()
 
     await user.click(screen.getByRole('button', { name: 'Nouvelle analyse' }))
@@ -121,11 +121,12 @@ describe('parcours d’analyse', () => {
     await user.click(screen.getByRole('button', { name: 'Continuer' }))
     await user.click(screen.getByRole('button', { name: 'Lancer l’analyse' }))
 
-    expect(await screen.findByText(/Doublons de principe actif : aucune alerte/)).toBeTruthy()
-    expect(screen.getByText(/doublons de classe thérapeutique ne sont pas encore vérifiés/)).toBeTruthy()
+    expect(await screen.findByText('Aucune alerte sur les contrôles réalisés.')).toBeTruthy()
+    expect(screen.getByText('Doublons de principe actif : aucune alerte')).toBeTruthy()
+    expect(screen.getByText('Interactions médicamenteuses')).toBeTruthy()
   })
 
-  test('prévient que la notice officielle s’ouvre sur un site extérieur', async () => {
+  test('donne accès à la notice officielle de chaque médicament identifié', async () => {
     const { user } = renderApp()
 
     await user.click(screen.getByRole('button', { name: 'Nouvelle analyse' }))
@@ -133,7 +134,8 @@ describe('parcours d’analyse', () => {
     await user.click(screen.getByRole('button', { name: 'Continuer' }))
     await user.click(screen.getByRole('button', { name: 'Lancer l’analyse' }))
 
-    expect(await screen.findByText(/le nom du médicament lui est transmis/)).toBeTruthy()
+    const link = await screen.findByRole('link', { name: 'DOLIPRANE 1000 mg, comprimé' })
+    expect(link.getAttribute('href')).toContain('/medicament/1/')
   })
 })
 
@@ -148,6 +150,15 @@ describe('saisie des médicaments', () => {
     expect(document.activeElement).toBe(screen.getByLabelText('Rechercher un médicament'))
   })
 
+  test('annonce l’absence de résultat', async () => {
+    const { user } = renderApp()
+
+    await user.click(screen.getByRole('button', { name: 'Nouvelle analyse' }))
+    await user.type(screen.getByLabelText('Rechercher un médicament'), 'xyzoline')
+
+    expect(screen.getByRole('status').textContent).toBe('Aucun résultat.')
+  })
+
   test('prévient quand tous les résultats ne sont pas affichés', async () => {
     const many = Array.from({ length: 20 }, (_, index) => specialite(String(index), `DOLIPRANE ${index} mg`))
     const { user } = renderApp(
@@ -159,7 +170,7 @@ describe('saisie des médicaments', () => {
     await user.click(screen.getByRole('button', { name: 'Nouvelle analyse' }))
     await user.type(screen.getByLabelText('Rechercher un médicament'), 'doliprane')
 
-    expect(screen.getByText(/D’autres médicaments correspondent : précisez la recherche/)).toBeTruthy()
+    expect(screen.getByText('Résultats limités à 12 : précisez la recherche.')).toBeTruthy()
   })
 
   test('refuse un fichier qui n’est pas une image, avec un message', async () => {

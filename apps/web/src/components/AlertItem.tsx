@@ -12,7 +12,7 @@ export function AlertItem({ alert, lineLabels }: Props) {
     ? `${alert.source.name}, mise à jour du ${formatDate(alert.source.updatedAt)}${
         alert.source.reference ? `, ${alert.source.reference}` : ''
       }`
-    : 'aucune source disponible pour ce contrôle'
+    : null
 
   return (
     <li className={`alert alert-${alert.kind}`}>
@@ -20,11 +20,13 @@ export function AlertItem({ alert, lineLabels }: Props) {
       {concerned.length > 0 && <p className="alert-lines">{concerned.join(' + ')}</p>}
       <p className="alert-problem">{alert.problem}</p>
       <p className="alert-action">
-        <span className="alert-field">Conduite suggérée, à vérifier :</span> {alert.suggestedAction}
+        <span className="alert-field">Conduite à tenir :</span> {alert.suggestedAction}
       </p>
-      <p className="alert-source">
-        <span className="alert-field">Source :</span> {source}
-      </p>
+      {source && (
+        <p className="alert-source">
+          <span className="alert-field">Source :</span> {source}
+        </p>
+      )}
     </li>
   )
 }

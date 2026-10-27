@@ -74,6 +74,17 @@ h2 {
   margin-bottom: 0.75rem;
 }
 
+h3 {
+  margin: 1rem 0 0.35rem;
+  font-size: var(--t-petit);
+  font-weight: 700;
+  color: var(--encre-douce);
+}
+
+h2 + h3 {
+  margin-top: 0;
+}
+
 a {
   color: var(--croix-fonce);
   font-weight: 600;

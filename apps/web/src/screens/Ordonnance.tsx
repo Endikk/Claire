@@ -18,7 +18,7 @@ export function Ordonnance() {
       <section aria-labelledby="medicaments-title">
         <h2 id="medicaments-title">Médicaments</h2>
         {lines.length === 0 ? (
-          <p className="empty">Ajoutez chaque médicament de l’ordonnance, dans l’ordre où il apparaît.</p>
+          <p className="empty">Aucun médicament saisi.</p>
         ) : (
           <ol className="lines">
             {lines.map((line) => (

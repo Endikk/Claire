@@ -3,7 +3,6 @@ import type { ActiveIngredient, Alert, CheckPerformed, CompositionFact, Prescrip
 export const CONTROLE_DOUBLONS: Omit<CheckPerformed, 'alertCount'> = {
   kind: 'doublon',
   label: 'Doublons de principe actif',
-  limit: 'Même substance dans la BDPM. Les doublons de classe thérapeutique ne sont pas encore vérifiés.',
 }
 
 export interface ResolvedLine {
@@ -34,8 +33,8 @@ export function doublonsDePrincipeActif(resolved: ResolvedLine[]): Alert[] {
     .map((group) => ({
       kind: 'doublon',
       lineIds: group.lines.map((entry) => entry.line.id),
-      problem: `Même principe actif dans ${group.lines.length} lignes : ${group.ingredient.name}.`,
-      suggestedAction: 'Vérifier que cette association est voulue par le prescripteur.',
+      problem: `Principe actif en double : ${group.ingredient.name}.`,
+      suggestedAction: 'S’assurer que l’association est voulue par le prescripteur.',
       source: group.lines[0]!.composition.source,
     }))
 }

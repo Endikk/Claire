@@ -10,6 +10,11 @@ type Props = {
   onSelect: (productId: string | null, label: string) => void
 }
 
+function describeCount(count: number): string {
+  if (count === 0) return 'Aucun résultat.'
+  return `${count} résultat${count > 1 ? 's' : ''}.`
+}
+
 export function ProductSearch({ onSelect }: Props) {
   const source = useSource()
   const [query, setQuery] = useState('')
@@ -42,11 +47,11 @@ export function ProductSearch({ onSelect }: Props) {
         autoComplete="off"
         autoCorrect="off"
         spellCheck={false}
-        placeholder="Nom, dosage : doliprane 1000"
+        placeholder="Nom du médicament"
         onChange={(event) => setQuery(event.target.value)}
       />
       <p role="status" className="search-status">
-        {isSearching ? `${results.length} résultat${results.length > 1 ? 's' : ''}.` : announcement}
+        {isSearching ? describeCount(results.length) : announcement}
       </p>
       {isSearching && (
         <ul className="search-results">
@@ -66,11 +71,11 @@ export function ProductSearch({ onSelect }: Props) {
             )
           })}
           {isTruncated && (
-            <li className="result-more">D’autres médicaments correspondent : précisez la recherche.</li>
+            <li className="result-more">Résultats limités à {MAX_RESULTS} : précisez la recherche.</li>
           )}
           <li>
             <button type="button" className="result-manual" onClick={() => handleSelect(null, trimmed)}>
-              Ajouter « {trimmed} » sans correspondance
+              Ajouter « {trimmed} » manuellement
             </button>
           </li>
         </ul>

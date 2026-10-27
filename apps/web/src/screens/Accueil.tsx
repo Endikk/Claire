@@ -14,8 +14,7 @@ export function Accueil() {
         <p className="brand">Claire</p>
         <h1>Analyser une ordonnance</h1>
         <p className="lede">
-          Photographiez l’ordonnance, saisissez les médicaments, cochez le profil du patient : Claire signale
-          les doublons et dit ce qu’elle n’a pas pu vérifier.
+          Saisissez l’ordonnance et le profil du patient : les alertes s’affichent par ordre de gravité.
         </p>
       </header>
 
@@ -27,26 +26,27 @@ export function Accueil() {
 
       {staleVersions.length > 0 && (
         <p className="form-error" role="alert">
-          Les données des médicaments datent de plus de {STALE_AFTER_DAYS} jours. Reconnectez le téléphone à
-          internet et rechargez l’application pour les mettre à jour.
+          La base des médicaments a plus de {STALE_AFTER_DAYS} jours. Connectez l’appareil à internet puis
+          relancez l’application pour la mettre à jour.
         </p>
       )}
 
       <section className="notice" aria-labelledby="accueil-confidentialite">
-        <h2 id="accueil-confidentialite">Aucune donnée du patient ne quitte ce téléphone</h2>
+        <h2 id="accueil-confidentialite">Confidentialité</h2>
         <p>
-          La photo et la saisie restent dans la mémoire du téléphone. Tout est effacé à la fin de l’analyse ou
-          à la fermeture de l’application.
+          Les données saisies restent sur l’appareil. Elles ne sont ni envoyées ni enregistrées, et sont
+          effacées à la fin de chaque analyse.
         </p>
       </section>
 
       <footer className="accueil-footer">
         <p>{AVERTISSEMENT}</p>
         <p>
-          Données :{' '}
+          Base des médicaments :{' '}
           {versions
             .map((version) => `${version.name}, mise à jour du ${formatDate(version.updatedAt)}`)
             .join(' ; ')}
+          .
         </p>
       </footer>
     </main>

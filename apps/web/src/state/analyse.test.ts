@@ -60,6 +60,7 @@ describe('résultat périmé', () => {
       recognizedCount: 0,
       recognizedLineIds: [],
       checksPerformed: [],
+      checksNotPerformed: [],
       situations: [],
       withProfile: false,
     },

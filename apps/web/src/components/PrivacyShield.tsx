@@ -1,10 +1,7 @@
 import { type ReactNode, useEffect, useState } from 'react'
 import { useAnalyseStore } from '../state/context'
 
-/**
- * Durée en arrière-plan au-delà de laquelle l'analyse est effacée.
- * Valeur provisoire, à fixer avec Mathilde (cahier des charges §7).
- */
+/** Durée en arrière-plan au-delà de laquelle l'analyse est effacée (cahier des charges §7). */
 export const BACKGROUND_RESET_MS = 5 * 60 * 1000
 
 type Props = { children: ReactNode }

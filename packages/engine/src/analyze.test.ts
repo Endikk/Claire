@@ -34,7 +34,7 @@ describe('information insuffisante', () => {
 
     const alert = result.alerts.find((item) => item.lineIds.includes('b'))
     expect(alert?.kind).toBe('information-insuffisante')
-    expect(alert?.problem).toContain('XYZOLINE 5 mg')
+    expect(alert?.problem).toBe('Médicament non identifié dans la base : non inclus dans l’analyse.')
     expect(result.scope.recognizedCount).toBe(1)
   })
 
@@ -46,7 +46,7 @@ describe('information insuffisante', () => {
     expect(result.alerts.find((item) => item.lineIds.includes('a'))?.kind).toBe('information-insuffisante')
   })
 
-  test('signale chaque situation cochée que les sources ne permettent pas de vérifier', async () => {
+  test('ne produit aucune alerte pour un profil seul', async () => {
     const source = sourceWith({ doliprane: [PARACETAMOL] })
 
     const result = await analyze(
@@ -55,25 +55,7 @@ describe('information insuffisante', () => {
       source,
     )
 
-    const situationAlerts = result.alerts.filter(
-      (item) => item.kind === 'information-insuffisante' && item.lineIds.length === 0 && item.source === null,
-    )
-    expect(situationAlerts.map((item) => item.problem)).toEqual([
-      expect.stringContaining('enceinte'),
-      expect.stringContaining('insuffisance rénale'),
-      expect.stringContaining('Interactions'),
-    ])
-  })
-
-  test('signale que les interactions, posologies et durées ne sont pas vérifiées', async () => {
-    const source = sourceWith({ doliprane: [PARACETAMOL] })
-
-    const result = await analyze([line('a', 'doliprane')], { situations: [] }, source)
-
-    const alert = result.alerts.find((item) => item.problem.startsWith('Interactions'))
-    expect(alert?.kind).toBe('information-insuffisante')
-    expect(alert?.problem).toContain('posologies')
-    expect(alert?.problem).toContain('durées')
+    expect(result.alerts).toEqual([])
   })
 })
 
@@ -121,19 +103,25 @@ describe('périmètre et ordre', () => {
     expect(result.scope.recognizedLineIds).toEqual(['a'])
   })
 
-  test('décrit le contrôle des doublons effectué et sa limite, même sans alerte', async () => {
+  test('décrit le contrôle des doublons effectué, même sans alerte', async () => {
     const source = sourceWith({ doliprane: [PARACETAMOL], advil: [IBUPROFENE] })
 
     const result = await analyze([line('a', 'doliprane'), line('b', 'advil')], { situations: [] }, source)
 
     expect(result.scope.checksPerformed).toEqual([
-      {
-        kind: 'doublon',
-        label: 'Doublons de principe actif',
-        limit:
-          'Même substance dans la BDPM. Les doublons de classe thérapeutique ne sont pas encore vérifiés.',
-        alertCount: 0,
-      },
+      { kind: 'doublon', label: 'Doublons de principe actif', alertCount: 0 },
+    ])
+  })
+
+  test('liste les contrôles non réalisés', async () => {
+    const result = await analyze([line('a', 'doliprane')], { situations: [] }, sourceWith({}))
+
+    expect(result.scope.checksNotPerformed).toEqual([
+      'Interactions médicamenteuses',
+      'Contre-indications',
+      'Posologies',
+      'Durées de traitement',
+      'Doublons de classe thérapeutique',
     ])
   })
 })
@@ -151,7 +139,7 @@ describe('doublons de principe actif', () => {
     const doublons = result.alerts.filter((alert) => alert.kind === 'doublon')
     expect(doublons).toHaveLength(1)
     expect(doublons[0]?.lineIds).toEqual(['a', 'b'])
-    expect(doublons[0]?.problem).toContain('PARACÉTAMOL')
+    expect(doublons[0]?.problem).toBe('Principe actif en double : PARACÉTAMOL.')
     expect(doublons[0]?.source).toEqual(BDPM)
   })
 

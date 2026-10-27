@@ -65,7 +65,7 @@ function Precisions() {
       )}
       {has('insuffisance-renale') && (
         <NumberPrecision
-          label="Clairance, si elle est connue"
+          label="Clairance de la créatinine"
           unit="ml/min"
           min={0}
           max={CLAIRANCE_MAX_ML_MIN}
@@ -75,7 +75,7 @@ function Precisions() {
       )}
       {has('allergies') && (
         <div className="precision">
-          <label htmlFor={`${id}-allergies`}>Allergies connues (médicament, aliment)</label>
+          <label htmlFor={`${id}-allergies`}>Allergies connues</label>
           <input
             id={`${id}-allergies`}
             value={profile.allergies ?? ''}
@@ -110,7 +110,7 @@ export function Profil() {
       if (current.step !== 'profil' || current.lines !== lines || current.profile !== profile) return
       setResult(result)
     } catch {
-      setError('L’analyse a échoué. Les données saisies sont conservées : relancez l’analyse.')
+      setError('L’analyse n’a pas abouti. La saisie est conservée : relancez l’analyse.')
       setIsAnalysing(false)
     }
   }
@@ -118,9 +118,7 @@ export function Profil() {
   return (
     <main className="screen">
       <StepHeader current="Profil patient" />
-      <p className="lede">
-        Cochez ce qui concerne le patient. Aucune case cochée : l’analyse portera sur l’ordonnance seule.
-      </p>
+      <p className="lede">Cochez les situations qui concernent le patient.</p>
 
       <fieldset className="situations" disabled={isAnalysing}>
         <legend className="visually-hidden">Situations du patient</legend>

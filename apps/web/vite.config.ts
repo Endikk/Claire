@@ -12,9 +12,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'robots.txt'],
       manifest: {
-        name: "Claire : aide à l'analyse d'ordonnance",
+        name: 'Claire : aide à l’analyse d’ordonnance',
         short_name: 'Claire',
-        description: "Aide à l'analyse d'ordonnance en arrière-pharmacie. Rien ne quitte le téléphone.",
+        description: 'Aide à l’analyse d’ordonnance pour les équipes officinales.',
         lang: 'fr',
         start_url: '/',
         display: 'standalone',

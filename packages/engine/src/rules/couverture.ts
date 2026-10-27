@@ -1,5 +1,13 @@
-import { SITUATION_LABELS } from '../labels'
-import type { Alert, PrescriptionLine, Situation } from '../types'
+import type { Alert, PrescriptionLine } from '../types'
+
+/** Contrôles qu'aucune source actuelle ne permet : ils sont affichés à côté des contrôles réalisés. */
+export const CONTROLES_NON_REALISES = [
+  'Interactions médicamenteuses',
+  'Contre-indications',
+  'Posologies',
+  'Durées de traitement',
+  'Doublons de classe thérapeutique',
+] as const
 
 export function medicamentsNonReconnus(lines: PrescriptionLine[], recognizedIds: Set<string>): Alert[] {
   return lines
@@ -7,32 +15,8 @@ export function medicamentsNonReconnus(lines: PrescriptionLine[], recognizedIds:
     .map((line) => ({
       kind: 'information-insuffisante',
       lineIds: [line.id],
-      problem: `« ${line.label} » n'a pas été reconnu dans les données : il n'est pas pris en compte dans l'analyse.`,
-      suggestedAction: 'Vérifier ce médicament manuellement.',
+      problem: 'Médicament non identifié dans la base : non inclus dans l’analyse.',
+      suggestedAction: 'Contrôler ce médicament manuellement.',
       source: null,
     }))
-}
-
-/** Aucune source actuelle ne fournit les contre-indications par situation : chaque case cochée est signalée. */
-export function situationsNonVerifiees(situations: Situation[]): Alert[] {
-  return situations.map((situation) => ({
-    kind: 'information-insuffisante',
-    lineIds: [],
-    problem: `Situation « ${SITUATION_LABELS[situation]} » non vérifiée : aucune source disponible ne donne les contre-indications correspondantes.`,
-    suggestedAction: 'Vérifier les contre-indications liées à cette situation dans une base de référence.',
-    source: null,
-  }))
-}
-
-export function controlesNonRealises(): Alert[] {
-  return [
-    {
-      kind: 'information-insuffisante',
-      lineIds: [],
-      problem:
-        'Interactions, posologies et durées de traitement non vérifiées : aucune source disponible ne permet ces contrôles.',
-      suggestedAction: 'Effectuer ces contrôles dans une base de référence.',
-      source: null,
-    },
-  ]
 }

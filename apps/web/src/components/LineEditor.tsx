@@ -25,7 +25,7 @@ export function LineEditor({ line }: Props) {
           Retirer
         </button>
       </div>
-      {!isRecognized && <p className="line-warning">Non reconnu dans les données</p>}
+      {!isRecognized && <p className="line-warning">Non identifié : non inclus dans l’analyse</p>}
       <div className="line-fields">
         <label htmlFor={`${id}-posologie`}>Posologie</label>
         <input

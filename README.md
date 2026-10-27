@@ -33,22 +33,20 @@ sont incomplets. Les en-têtes de sécurité sont dans `apps/web/public/_headers
 Une future base sous licence (Vidal, Thériaque, BCB, Posos) s'ajoutera comme une nouvelle
 implémentation de `DrugKnowledgeSource`, sans toucher au moteur ni à l'application.
 
-## Ce que fait la version actuelle
+## Fonctionnalités
 
-- Saisie assistée des médicaments par recherche dans la BDPM, ou saisie libre signalée « non reconnu ».
-- Photo de l'ordonnance affichée pour la relecture, jamais lue ni envoyée.
+- Saisie des médicaments par recherche dans la BDPM, ou saisie manuelle d'un médicament hors base.
+- Photo de l'ordonnance affichée pendant la saisie, ni lue ni envoyée.
 - Profil patient avec les précisions du cahier (trimestre, âge, poids, clairance, allergies).
-- Alertes : doublons de principe actif. Tout ce qui ne peut pas être vérifié est signalé en
-  « information insuffisante » : médicaments non reconnus, chaque situation cochée, interactions,
-  posologies et durées.
-- Effacement : à la fin de l'analyse, à la fermeture, et après cinq minutes en arrière-plan
-  (durée provisoire, à fixer avec Mathilde).
+- Alertes classées par gravité : doublons de principe actif, médicaments non identifiés.
+- Liste des contrôles réalisés et non réalisés à chaque analyse.
+- Effacement à la fin de l'analyse, à la fermeture, et après cinq minutes en arrière-plan.
 
-## Pas encore fait
+## Feuille de route
 
-- Lecture automatique de la photo (Tesseract.js, prochaine étape).
-- Interactions issues du Thésaurus de l'ANSM (transcription à faire, puis relecture par un pharmacien).
-- Doublons de classe (classes ATC d'Open Medic).
+- Lecture automatique de la photo (Tesseract.js).
+- Interactions issues du Thésaurus de l'ANSM.
+- Doublons de classe thérapeutique (classes ATC d'Open Medic).
 - Mode étudiant.
 
 ## Licences des données

@@ -45,60 +45,59 @@ export function Resultats() {
 
       <section className="scope" aria-labelledby="scope-title">
         <h2 id="scope-title" className="visually-hidden">
-          Périmètre de l’analyse
+          Résumé
         </h2>
         <p>
-          Analyse portée sur {plural(scope.lineCount, 'médicament')}, dont {scope.recognizedCount} reconnu
-          {scope.recognizedCount > 1 ? 's' : ''} dans les données.
+          Médicaments analysés : {scope.recognizedCount} sur {scope.lineCount}.
         </p>
-        <p>
-          {scope.withProfile
-            ? `Profil pris en compte : ${describeProfile(profile)}.`
-            : 'Analyse sans profil patient : aucune case cochée.'}
-        </p>
-        <p>{RAPPEL_TRAITEMENTS_ABSENTS}</p>
+        <p>{scope.withProfile ? `Profil : ${describeProfile(profile)}.` : 'Profil : non renseigné.'}</p>
+        <p className="hint">{RAPPEL_TRAITEMENTS_ABSENTS}</p>
+      </section>
+
+      <section aria-labelledby="alertes-title">
+        <h2 id="alertes-title">Alertes</h2>
+        {result.alerts.length === 0 ? (
+          <p className="empty">Aucune alerte sur les contrôles réalisés.</p>
+        ) : (
+          <ol className="alerts">
+            {result.alerts.map((alert) => (
+              <AlertItem
+                key={`${alert.kind}-${alert.lineIds.join('-')}-${alert.problem}`}
+                alert={alert}
+                lineLabels={lineLabels}
+              />
+            ))}
+          </ol>
+        )}
       </section>
 
       <section aria-labelledby="controles-title">
-        <h2 id="controles-title">Contrôles effectués</h2>
+        <h2 id="controles-title">Contrôles</h2>
+        <h3>Réalisés</h3>
         <ul className="checks">
           {scope.checksPerformed.map((check) => (
             <li key={check.kind}>
-              <p>
-                {check.label} :{' '}
-                {check.alertCount === 0 ? 'aucune alerte' : plural(check.alertCount, 'alerte')}.
-              </p>
-              <p className="hint">{check.limit}</p>
+              {check.label} : {check.alertCount === 0 ? 'aucune alerte' : plural(check.alertCount, 'alerte')}
             </li>
+          ))}
+        </ul>
+        <h3>Non réalisés</h3>
+        <ul className="checks">
+          {scope.checksNotPerformed.map((label) => (
+            <li key={label}>{label}</li>
           ))}
         </ul>
       </section>
 
-      <section aria-labelledby="alertes-title">
-        <h2 id="alertes-title">Alertes, de la plus grave à la moins grave</h2>
-        <ol className="alerts">
-          {result.alerts.map((alert) => (
-            <AlertItem
-              key={`${alert.kind}-${alert.lineIds.join('-')}-${alert.problem}`}
-              alert={alert}
-              lineLabels={lineLabels}
-            />
-          ))}
-        </ol>
-      </section>
-
       {recognized.length > 0 && (
-        <section aria-labelledby="fiches-title">
-          <h2 id="fiches-title">Fiches conseils</h2>
-          <p className="hint">
-            Chaque lien ouvre la notice officielle sur le site public de la BDPM (ANSM) : le nom du médicament
-            lui est transmis, aucune donnée du patient.
-          </p>
+        <section aria-labelledby="notices-title">
+          <h2 id="notices-title">Notices</h2>
+          <p className="hint">Notices officielles, sur le site de l’ANSM.</p>
           <ul className="notices">
             {recognized.map((line) => (
               <li key={line.id}>
                 <a href={noticeUrl(line.productId!)} target="_blank" rel="noopener noreferrer">
-                  Notice de {line.label}
+                  {line.label}
                 </a>
               </li>
             ))}
@@ -109,10 +108,11 @@ export function Resultats() {
       <footer className="results-footer">
         <p>{AVERTISSEMENT}</p>
         <p>
-          Sources :{' '}
+          Source :{' '}
           {result.sources
             .map((item) => `${item.name}, mise à jour du ${formatDate(item.updatedAt)}`)
             .join(' ; ')}
+          .
         </p>
       </footer>
 
@@ -121,7 +121,7 @@ export function Resultats() {
           Modifier l’ordonnance
         </button>
         <button type="button" className="button-primary" onClick={reset}>
-          Terminer et effacer
+          Terminer
         </button>
       </div>
     </main>

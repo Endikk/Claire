@@ -37,7 +37,7 @@ export function NumberPrecision({ label, unit, min, max, value, onChange }: Prop
       />
       {isInvalid && (
         <p id={`${id}-error`} className="field-error">
-          Entrez un nombre entre {min} et {max} {unit}. La valeur n’est pas prise en compte.
+          Saisissez une valeur entre {min} et {max} {unit}.
         </p>
       )}
     </div>

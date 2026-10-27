@@ -77,7 +77,7 @@ export interface Alert {
   lineIds: string[]
   problem: string
   suggestedAction: string
-  /** `null` quand l'alerte constate justement l'absence de source. */
+  /** `null` quand l'alerte porte sur un médicament absent des données. */
   source: SourceRef | null
 }
 
@@ -85,8 +85,6 @@ export interface Alert {
 export interface CheckPerformed {
   kind: AlertKind
   label: string
-  /** Ce que le contrôle ne couvre pas : « aucune alerte » ne veut jamais dire « aucun problème ». */
-  limit: string
   alertCount: number
 }
 
@@ -95,6 +93,8 @@ export interface AnalysisScope {
   recognizedCount: number
   recognizedLineIds: string[]
   checksPerformed: CheckPerformed[]
+  /** Affichés avec les contrôles réalisés : « aucune alerte » ne veut jamais dire « aucun problème ». */
+  checksNotPerformed: string[]
   situations: Situation[]
   withProfile: boolean
 }

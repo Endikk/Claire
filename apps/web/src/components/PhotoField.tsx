@@ -35,7 +35,9 @@ export function PhotoField() {
           <span className="photo-hint">{isEnlarged ? 'Réduire la photo' : 'Agrandir la photo'}</span>
         </button>
       ) : (
-        <p className="photo-empty">Aucune photo. Elle aide à relire, elle n’est jamais envoyée.</p>
+        <p className="photo-empty">
+          Ajoutez la photo de l’ordonnance pour l’avoir sous les yeux pendant la saisie.
+        </p>
       )}
       <div className="photo-actions">
         <label className="button-secondary">
@@ -58,10 +60,6 @@ export function PhotoField() {
           {error}
         </p>
       )}
-      <p className="hint">
-        La lecture automatique n’est pas encore disponible : saisissez les médicaments en vous aidant de la
-        photo.
-      </p>
     </section>
   )
 }

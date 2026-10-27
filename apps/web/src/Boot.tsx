@@ -36,7 +36,7 @@ export function Boot() {
       <p className="brand">Claire</p>
       {state.status === 'loading' ? (
         <>
-          <p>Chargement des données des médicaments.</p>
+          <p>Chargement de la base des médicaments.</p>
           <div className="boot-skeleton" aria-hidden="true">
             <span />
             <span />
@@ -45,13 +45,10 @@ export function Boot() {
         </>
       ) : (
         <div role="alert">
-          <h1>Données des médicaments introuvables</h1>
-          <p>
-            Rechargez la page. Si le problème continue, l’application a été publiée sans ses données : il faut
-            relancer sa construction.
-          </p>
+          <h1>Impossible de charger la base des médicaments</h1>
+          <p>Vérifiez la connexion internet de l’appareil, puis réessayez.</p>
           <button type="button" className="button-primary" onClick={() => window.location.reload()}>
-            Recharger
+            Réessayer
           </button>
         </div>
       )}
