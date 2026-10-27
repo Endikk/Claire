@@ -1,0 +1,3 @@
+# Outil d'arrière-pharmacie : rien à indexer.
+User-agent: *
+Disallow: /

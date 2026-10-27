@@ -1,0 +1,7 @@
+{
+  "extends": "@claire/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["src", "scripts"]
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "public/**", "tsconfig.json", "package.json"],
+      "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "scripts/**", "tsconfig.json", "package.json"]
+    },
+    "lint": {
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "scripts/**", "../../biome.json"]
+    },
+    "test": {
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "vitest.config.ts", "package.json"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

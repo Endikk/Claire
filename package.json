@@ -1,0 +1,28 @@
+{
+  "name": "claire",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "npm@11.12.1",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "build:deploy": "npm run data && turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "check": "turbo lint typecheck test build",
+    "format": "biome format --write apps packages",
+    "data": "npm run data -w @claire/web"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.3",
+    "turbo": "^2.11.10"
+  }
+}
